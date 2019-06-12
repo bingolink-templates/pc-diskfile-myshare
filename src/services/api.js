@@ -10,7 +10,8 @@ var fileImageTypes = {
     'video': ['rm', 'rmvb', 'wmv', 'avi', 'mp4', '3gp', 'mkv', 'flv', 'mov', 'mpg'],
     'word': ['doc', 'docx', 'wps'],
     'zip': ['zip', 'rar', '7z'],
-    'unknow': ['file']
+    'unknow': ['file'],
+    'folder': ['folder']
 }
 var fileImages = {};
 var fileTypeImages = {};
@@ -38,13 +39,13 @@ module.exports = {
         app.linkplugin.ajax({
             url: window.env.diskOpenApiUri + 'file/share/list',
             data: {
-                to: 'U' + window.userInfo.userId
+                by: window.userInfo.userId
             },
             success: function(res){
                 try {
                     var files = res.rows;
                     util.each(files, function(f){
-                        f.iconPath = getFileImages(f.extension);
+                        f.iconPath = getFileImages(f.type == 'D' ? 'folder' : f.extension);
                     })
                     success(files);
                 } catch(e){

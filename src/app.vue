@@ -1,7 +1,7 @@
 <template>
   <div class="rec-files">
     <div class="header">
-      <span class="title">{{i18n.FileSharedToMe}}</span>
+      <span class="title">{{i18n.FileSharedByMe}}</span>
       <span class="more" @click="toMore()">{{i18n.More}}</span>
     </div>
     <div class="content clearfloat" v-bind:style="{height: contentHeight}">
@@ -57,7 +57,7 @@ export default {
     },
     preview(row){
       app.linkplugin.previewDiskFile({
-        fileId: row.id,
+        fileId: row.fileId,
         fileName: row.name,
         fileExt: row.extension,
         previewAvailable: row.preview.available,
@@ -65,7 +65,7 @@ export default {
       })
     },
     toMore(){
-      app.linkplugin.jumpToDiskView(['RNODE_SHARE', 'RNODE_SHARE_TO']);
+      app.linkplugin.jumpToDiskView(['RNODE_SHARE', 'RNODE_SHARE_BY']);
     }
   }
 }
