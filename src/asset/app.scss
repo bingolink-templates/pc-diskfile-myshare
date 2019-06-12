@@ -1,0 +1,77 @@
+body{
+    background: gray;
+}
+
+.rec-files{
+    padding: 12px 0;
+    background-color: #FFF;
+}
+
+.header{
+    height:20px;
+    padding: 0 12px;
+    margin-bottom: 12px;
+    line-height:20px;
+    .title{
+        font-size:14px;
+    }
+    .more{
+        float: right;
+        font-size:12px;
+        color:rgba(153,153,153,1);
+        cursor: pointer;
+    }
+}
+
+.content{
+    position: relative;
+    overflow: hidden;
+}
+
+.item{
+    float: left;
+    margin: 0 7px;
+}
+
+.clearfloat:after{
+    content:"\200B";/*unicode字符里零宽度空格*/
+    display:block;
+    height:0;
+    clear:both;
+}
+
+.file{
+    .icon{
+        display: block;
+        height: 24px;
+        width: 24px;
+        margin: 6px auto 0;
+        cursor: pointer;
+    }
+    .title{
+        width: 60px;
+        text-align: center;
+        font-size: 12px;
+        margin-top: 6px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        word-break: break-all;
+    }
+}
+
+.error-info{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    img{
+        width: 24px;
+        vertical-align: text-bottom;
+    }
+    span{
+        font-size: 12px;
+        cursor: pointer;
+    }
+}
