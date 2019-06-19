@@ -5,7 +5,8 @@
       <span class="more" @click="toMore()">{{i18n.More}}</span>
     </div>
     <div class="content clearfloat" v-bind:style="{height: contentHeight}">
-      <div class="item" v-for="(item, $index) in files" :key="item">
+      <div class="item" v-for="(item, $index) in files" :key="item"
+        v-bind:style="{height: rowHeight + 'px'}">
         <div class="file">
           <img class="icon" @click="preview(item)" :src="item.iconPath" />
           <span class="title" :title="item.name">{{item.name}}</span>
