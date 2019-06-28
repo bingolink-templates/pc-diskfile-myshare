@@ -51,6 +51,7 @@ export default {
     loadFiles(){
       apiSer.getRecentUsedFiles((files) => {
         this.files = files;
+        console.log(files);
         this.errMsg = '';
       }, (errMsg) => {
         this.errMsg = errMsg;
