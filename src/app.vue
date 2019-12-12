@@ -5,10 +5,13 @@
             <span class="more" @click="toMore()">{{i18n.More}}</span>
         </div>
         <div class="content clearfloat" v-bind:style="{height: contentHeight}">
-            <div class="item" v-for="(item, $index) in files" :key="item" v-bind:style="{height: rowHeight + 'px'}">
-                <div class="file">
-                    <img class="icon" @click="preview(item)" :src="item.iconPath" />
-                    <span class="title" :title="item.name">{{item.name}}</span>
+            <div class="item" v-for="(item, $index) in files" :key="$index" v-bind:style="{height: rowHeight + 'px',  width: pageWidth}">
+                <div class="item_area">
+                    <div class="file">
+                        <img class="icon" @click="preview(item)" :src="item.iconPath" />
+                        <span class="title" :title="item.name">{{item.name}}</span>
+                    </div>
+                    <span class="time" v-if='pageWidth'>{{item.createdTime}}</span>
                 </div>
             </div>
             <div class="error-info" v-if="errMsg">
@@ -20,64 +23,78 @@
 </template>
 
 <script>
-    import apiSer from 'ser/api'
+import apiSer from 'ser/api'
 
-    export default {
-        data() {
-            return {
-                i18n: window.i18n,
-                //限制显示行数
-                limitRowsNum: 2,
-                //每行高度
-                rowHeight: 70,
-                contentHeight: 'auto',
-                files: [],
-                errMsg: ''
+export default {
+    data() {
+        return {
+            i18n: window.i18n,
+            //限制显示行数
+            limitRowsNum: 4,
+            //每行高度
+            rowHeight: 44,
+            contentHeight: 'auto',
+            files: [],
+            errMsg: '',
+            pageWidth: ''
+        }
+    },
+    components: {
+    },
+    created() {
+        this.contentHeight = this.limitRowsNum * this.rowHeight + 'px';
+        app.linkplugin.getUserInfo((userInfo) => {
+            window.userInfo = userInfo;
+            this.loadFiles();
+        })
+        app.linkplugin.listenRefreshWidgetData(() => {
+            this.loadFiles();
+        });
+        this.resize()
+    },
+    mounted() {
+    },
+    methods: {
+        resize() {
+            var that = this
+            window.onresize = function () {
+                if (document.body.clientWidth > 400) {
+                    that.pageWidth = document.body.clientWidth - 24 + 'px'
+                } else {
+                    that.pageWidth = ''
+                }
             }
+            window.onresize()
         },
-        components: {
-        },
-        created() {
-            this.contentHeight = this.limitRowsNum * this.rowHeight + 'px';
-            app.linkplugin.getUserInfo((userInfo) => {
-                window.userInfo = userInfo;
-                this.loadFiles();
-            })
-            app.linkplugin.listenRefreshWidgetData(() => {
-                this.loadFiles();
+        loadFiles() {
+            apiSer.getRecentUsedFiles((files) => {
+                this.files = files;
+                console.log(files);
+                this.errMsg = '';
+            }, (errMsg) => {
+                this.errMsg = errMsg;
             });
         },
-        mounted() {
+        preview(row) {
+            // canPreview  如果是F 传true  否则 false
+            app.linkplugin.previewDiskFile({
+                fileId: row.fileId,
+                fileName: row.name,
+                fileExt: row.extension,
+                previewAvailable: row.preview.available,
+                wopiSupport: row.preview.wopiSupport,
+                canPreview: row.type == 'F'
+            })
         },
-        methods: {
-            loadFiles() {
-                apiSer.getRecentUsedFiles((files) => {
-                    this.files = files;
-                    console.log(files);
-                    this.errMsg = '';
-                }, (errMsg) => {
-                    this.errMsg = errMsg;
-                });
-            },
-            preview(row) {
-                // canPreview  如果是F 传true  否则 false
-                app.linkplugin.previewDiskFile({
-                    fileId: row.fileId,
-                    fileName: row.name,
-                    fileExt: row.extension,
-                    previewAvailable: row.preview.available,
-                    wopiSupport: row.preview.wopiSupport,
-                    canPreview: row.type == 'F'
-                })
-            },
-            toMore() {
-                app.linkplugin.jumpToDiskView(['RNODE_SHARE', 'RNODE_SHARE_BY']);
-            }
+        toMore() {
+            app.linkplugin.jumpToDiskView(['RNODE_SHARE_BY'])
+            // app.linkplugin.jumpToDiskView(['RNODE_SHARE', 'RNODE_SHARE_BY']);
         }
     }
+}
 </script>
 
 <style lang="scss">
-    @import "~asset/common";
-    @import "~asset/app";
+@import "~asset/common";
+@import "~asset/app";
 </style>

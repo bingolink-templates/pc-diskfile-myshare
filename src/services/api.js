@@ -46,6 +46,7 @@ module.exports = {
                     var files = res.rows;
                     util.each(files, function(f){
                         f.iconPath = getFileImages(f.type == 'D' ? 'folder' : f.extension);
+                        f.createdTime = util.format(f.createdTime)
                     })
                     success(files);
                 } catch(e){
